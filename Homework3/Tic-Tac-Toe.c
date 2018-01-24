@@ -35,7 +35,7 @@ void main()
         char Board[9] = {'1','2','3','4','5','6','7','8','9'};
         char cont = ' ';
 
-	
+	// Create/open html file
 	system("firefox display.html &\n");
 
 
@@ -281,13 +281,13 @@ void main()
                 Board[computer_move] = 'X';
         }
                 
-        // Print_board: Board Visualizer for Player - Clears Console and Prints Board
+        // Print_board: Board Visualizer for Player - Prints Board into the html file
         void Print_board(char* Board)
         {
-                //Prints Board into the html file
-                
+                // opens the display file for editing
 		FILE *HtmlDisplay = fopen("display.html","w+"); //Open the html file for writing
 		
+		//sets up header code for html - could make neater
 		fprintf(HtmlDisplay,"<html><head><meta charset=\"UTF-8\"><meta http-equiv=\"Refresh\" content=\"5\"></head><body><br />");
 		fprintf(HtmlDisplay,"<font size-\"5\">");
 	
@@ -301,7 +301,7 @@ void main()
                 
 	
 
-                fprintf(HtmlDisplay,"<br /><br />");
+                fprintf(HtmlDisplay,"<br />");
                 //Print first line
                fprintf(HtmlDisplay,"    <br />");
                 //Print second line
