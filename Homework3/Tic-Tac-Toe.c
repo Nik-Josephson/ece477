@@ -1,0 +1,372 @@
+// ECE 477
+// Tic-Tac-Toe.c
+
+//Includes
+#include <stdio.h>
+#include <ctype.h>
+
+
+//Program Defines
+        // Check_win: Check Board For Winner or Game Over
+        void Check_win(char* Board, char* Winner, int* GameOver);
+        
+        // Pturn: Player Turn - Prompt Player Input, Wait For Player Input, Check if Valid Move, then Update Board
+        void Pturn(char* Board);
+
+        //eval: Evaluate the state of position a and b on Board and return a desirability value
+        int eval(int a, int b, char* Board);
+        
+        // Cturn: Computer Turn - Check Open Spaces for Possible Moves, Determine Desired Move, then Update Board
+        void Cturn(char* Board);
+        
+        // Print_board: Board Visualizer for Player - Clears Console and Prints Board
+        void Print_board(char* Board);
+        
+        // Reset: Clear Board and reset Winner to 0
+        void Reset(char* Board, char* Winner, int* GameOver, char* cont);
+
+
+//Main File
+void main()
+{
+        //Initializations
+        int GameOver = 0;
+        char Winner = '0';
+        char Board[9] = {'1','2','3','4','5','6','7','8','9'};
+        char cont = ' ';
+
+	
+	system("firefox display.html &\n");
+
+
+        while(1)
+        {
+                //Start New Game - Set 'Winner' to 0 and clear board
+                Reset(&Board[0], &Winner, &GameOver, &cont);
+        
+                // Print_board: Board Visualizer for Player
+                Print_board(&Board[0]);
+                
+                //Continues alternating turns until the game is complete
+                while(GameOver!=1)
+                {
+                        // Pturn: Player Turn
+                        Pturn(&Board[0]);
+        
+                        // Print_board: Board Visualizer for Player
+                        Print_board(&Board[0]);
+                
+                        // Check_win: Check Board For Winner or Game Over
+                        Check_win(&Board[0], &Winner, &GameOver);
+                        if(GameOver) break;
+                        
+                        // Cturn: Computer Turn
+                        Cturn(&Board[0]);
+                        
+                        // Print_board: Board Visualizer for Player
+                        Print_board(&Board[0]);
+                        
+                        // Check_win: Check Board For Winner or Game Over
+                        Check_win(&Board[0], &Winner, &GameOver);
+                
+                        //End While Loop
+                }
+                //Report Winner to Console
+                if(Winner==' ')
+                {
+                        printf("\nNo Winner\n");
+                }
+                else{
+                if(Winner=='O')
+                {
+                        printf("\nPlayer Wins\n");
+                }
+                else{
+                        printf("\nComputer Wins\n");
+                }
+                }        
+                // Newgame? Y/N
+                printf("\nBegin a new game? y/n: ");
+                while(cont!='y'&&cont!='n'){                
+                        scanf(" %c", &cont);
+                        if(cont!='y'&&cont!='n')
+                                printf("\nplease select 'y' or 'n'");
+                }
+                if(cont!='y')
+                        break;
+                
+                
+        
+                //End While Loop
+        }
+
+
+//End of Main File
+        return;
+}        
+                
+        //Program Definitions
+        // Check_win: Check Board For Winner or Game Over
+        void Check_win(char* Board, char* Winner, int* GameOver)
+        {
+        
+                *GameOver = 1;
+                
+                //If there is an open square anywhere on the board, set move_available to True
+                for(int temp = 0; temp < 9; temp++)
+                {
+                        if( Board[temp]!='X' && Board[temp]!='O' )
+                        {
+                                *GameOver = 0;
+                        }
+                }
+                
+                //Check for any three marks in a row, if found, set Winner to O
+                //for Player win or X for Computer win.
+                
+                if(Board[0]==Board[1] && Board[1]==Board[2])
+                {
+                        *Winner = Board[1];
+                }
+                else if(Board[3]==Board[4] && Board[5]==Board[4])
+                {
+                        *Winner = Board[3];
+                }
+                else if(Board[6]==Board[7] && Board[8]==Board[7])
+                {
+                        *Winner = Board[7];
+                }
+                else if(Board[0]==Board[3] && Board[6]==Board[3])
+                {
+                        *Winner = Board[3];
+                }
+                else if(Board[1]==Board[4] && Board[7]==Board[4])
+                {
+                        *Winner = Board[4];
+                }
+                else if(Board[2]==Board[5] && Board[8]==Board[5])
+                {
+                        *Winner = Board[5];
+                }
+                else if(Board[0]==Board[4] && Board[8]==Board[4])
+                {
+                        *Winner = Board[4];
+                }
+                else if(Board[2]==Board[4] && Board[6]==Board[4])
+                {
+                        *Winner = Board[4];
+                }
+                else
+                {
+                        *Winner = ' ';
+                }
+                
+                //If there is a winner, there is no more moves needed
+                if(*Winner!= ' ')
+                {
+                        *GameOver=1;
+                }
+        }
+        
+        // Pturn: Player Turn - Prompt Player Input, Wait For Player Input, Check if Valid Move, then Update Board
+        void Pturn(char* Board)
+        {
+                char holding=' ';
+                int thing = 0;
+                int done = 0;        
+        
+                while(!done)
+                {
+                        //Prompt Player input
+                        printf("\n Choose a value between 1 and 9 for your turn:");
+                        //receive input        
+                        scanf(" %c", &holding);        
+                        //Check if input is a valid command (Within Constraints)
+                        if((!isdigit(holding))||(holding=='0'))
+                        {
+                                printf("\n You entered %c", holding);
+                                printf("\n please enter a valid option, using the numbers 1 through 9");
+                        }
+                                
+                        //Check if location is empty (ie, is a valid move)
+                        else{
+                                thing = holding - '1';
+                                if((Board[thing]=='X')||(Board[thing]=='O'))
+                                printf("\n please enter a valid option, that space is filled");
+                                else{
+                                        done = 1;
+                                }
+                        }
+                for(int i = 0;i<500;i++);                
+                }                        
+                        // Update board with Player Move
+                        Board[thing] = 'O';
+        }                
+        
+        // Cturn: Computer Turn - Check Open Spaces for Possible Moves, Determine Desired Move, then Update Board
+        void Cturn(char* Board)
+        {
+                int move_priority = 0;
+                int computer_move = 10;
+                int move_desirability = 0;
+                
+                //Scan Board for Possible moves
+                for(int temp = 0; temp < 9; temp++)
+                {        
+                        //Reset move_desirability for new location
+                        move_desirability = 0;
+                        
+                //If space is open, evaluate move desirability
+                if( Board[temp]!='X' && Board[temp]!='O' )
+                        {
+                                
+                                switch (temp)
+                                {
+                                        case 0:
+                                                move_desirability+=eval(1,2,&Board[0]);
+                                                move_desirability+=eval(4,8,&Board[0]);
+                                                move_desirability+=eval(3,6,&Board[0]);
+                                                break;
+                                        case 1:
+                                                move_desirability+=eval(0,2,&Board[0]);
+                                                move_desirability+=eval(4,7,&Board[0]);
+                                                break;
+                                        case 2:
+                                                move_desirability+=eval(0,1,&Board[0]);
+                                                move_desirability+=eval(4,6,&Board[0]);
+                                                move_desirability+=eval(5,8,&Board[0]);
+                                                break;
+                                        case 3:
+                                                move_desirability+=eval(0,6,&Board[0]);
+                                                move_desirability+=eval(4,5,&Board[0]);
+                                                break;
+                                        case 4:
+                                                move_desirability+=eval(0,8,&Board[0]);
+                                                move_desirability+=eval(1,7,&Board[0]);
+                                                move_desirability+=eval(2,6,&Board[0]);
+                                                move_desirability+=eval(3,5,&Board[0]);
+                                                break;
+                                        case 5:
+                                                move_desirability+=eval(2,8,&Board[0]);
+                                                move_desirability+=eval(3,4,&Board[0]);
+                                                break;
+                                        case 6:
+                                                move_desirability+=eval(0,3,&Board[0]);
+                                                move_desirability+=eval(2,4,&Board[0]);
+                                                move_desirability+=eval(7,8,&Board[0]);
+                                                break;
+                                        case 7:
+                                                move_desirability+=eval(6,8,&Board[0]);
+                                                move_desirability+=eval(1,4,&Board[0]);
+                                                break;
+                                        case 8:
+                                                move_desirability+=eval(0,4,&Board[0]);
+                                                move_desirability+=eval(6,7,&Board[0]);
+                                                move_desirability+=eval(2,5,&Board[0]);
+                                                break;
+                                }
+                                //printf("\npriority for %d is %d", (temp+1), move_desirability);
+
+
+                                //If move is more desirable than last move of priority
+                                if(move_desirability > move_priority)
+                                {
+                                        computer_move = temp;
+                                        move_priority = move_desirability; 
+                                }
+                        }
+                }
+        
+                //Update board with Computer Move
+                Board[computer_move] = 'X';
+        }
+                
+        // Print_board: Board Visualizer for Player - Clears Console and Prints Board
+        void Print_board(char* Board)
+        {
+                //Prints Board into the html file
+                
+		FILE *HtmlDisplay = fopen("display.html","w+"); //Open the html file for writing
+		
+		fprintf(HtmlDisplay,"<html><head><meta charset=\"UTF-8\"><meta http-equiv=\"Refresh\" content=\"5\"></head><body><br />");
+		fprintf(HtmlDisplay,"<font size-\"5\">");
+	
+                //    
+                //     X  |  X  |  X  
+                //  
+                //     X  |  X  |  X  
+                //   
+                //     X  |  X  |  X  
+                //    
+                
+	
+
+                fprintf(HtmlDisplay,"<br /><br />");
+                //Print first line
+               fprintf(HtmlDisplay,"    <br />");
+                //Print second line
+               fprintf(HtmlDisplay,"&nbsp; &nbsp;  &nbsp; %c &nbsp; &nbsp;  &nbsp; &nbsp; %c &nbsp; &nbsp;  &nbsp; &nbsp; %c  <br />",Board[0],Board[1],Board[2]);
+                //Print third line
+                fprintf(HtmlDisplay," <br />");
+                //Print fourth line
+                fprintf(HtmlDisplay,"&nbsp; &nbsp;  &nbsp; %c &nbsp; &nbsp;   &nbsp; &nbsp; %c &nbsp; &nbsp;  &nbsp; &nbsp; %c  <br />",Board[3],Board[4],Board[5]);
+                //Print fifth line
+                fprintf(HtmlDisplay," <br />");
+                //Print sixth line
+                fprintf(HtmlDisplay," &nbsp; &nbsp;  &nbsp;  %c &nbsp; &nbsp;  &nbsp; &nbsp; %c &nbsp; &nbsp; &nbsp; &nbsp; %c  <br />",Board[6],Board[7],Board[8]);
+                //Print seventh line
+                fprintf(HtmlDisplay,"  <br />");
+		fprintf(HtmlDisplay,"</font></body></html>");
+		fclose(HtmlDisplay);
+        }
+        
+        // Reset: Clear Board and reset Winner to 0
+        void Reset(char* Board, char* Winner, int* GameOver, char* cont)
+        {
+        
+                *Winner = ' ';
+                
+                for(int temp = 0; temp < 9; temp++)
+                {
+                        Board[temp]=temp+1+'0';
+                }
+                
+                *cont = ' ';
+                
+                *GameOver=0;
+        }
+
+
+        //eval: Evaluate the state of position a and b on Board and return a desirability value
+        int eval(int a, int b, char* Board)
+                {
+                
+                int eval_temp = 0;
+        
+                        if(Board[a]=='X' && Board[b]=='X')
+                        {
+                        eval_temp += 1000;
+                        }
+                        else if(Board[a]=='O' && Board[b]=='O')
+                        {
+                                eval_temp += 100;
+                        }
+                        else if(Board[a]=='X' || Board[b]=='X')
+                        {
+                                if(Board[a]=='O' || Board[b]=='O')
+                                {
+                                        eval_temp += 0;
+                                }
+                                else
+                                {
+                                        eval_temp += 10;
+                                }
+                        }
+                        else
+                        {
+                                eval_temp += 1;
+                        }
+
+
+                return eval_temp;
+                }
