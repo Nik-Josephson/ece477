@@ -1,6 +1,6 @@
 #include <stdio.h>
 int main()
 {
-	printf("\n");
+	printf("    .--._____,\n .-='=='==-, '\n(O_o_o_o_o_O)\n");
 	return 0;
 }
