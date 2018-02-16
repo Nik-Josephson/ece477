@@ -16,7 +16,7 @@
 	int Prun;
 	int Ptotal;
 
-
+/*Define for user-made alarm*/
 void program_alarm(int sig);
 
 
@@ -25,10 +25,8 @@ int main()
 {
 
 	fp=fopen("output.csv","w+");
-
 	printf("Creating and opening output.csv\n");
-
-	fprintf(fp,"Num FreeMem LAone LAfive LAten Prun Ptotal");
+	fprintf(fp,"IdNum FreeMem LAone LAfive LAten Prun Ptotal");
 
 	alarm_count = 0;
 	signal(SIGALRM, program_alarm);
@@ -46,9 +44,6 @@ void program_alarm(int sig)
 	fscanf(fd, "%s %d %s %s %d", &junk, &junk,  &junk, &junk, &memfree);
 	printf("memfree is %d\n", memfree);
 	fclose(fd);
-
-	
-
 
 	fopen("/proc/loadavg", "rt");
 	if(!fd) printf("Error opening loadavg\n");
